@@ -5,6 +5,8 @@ import pyqtgraph as pg
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 from random import randint
 
+from listener import Listener
+
 class LatencyChart(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -33,12 +35,8 @@ class LatencyChart(QMainWindow):
         self.x_data = np.arange(10)  # Router hops
         self.y_data = [randint(10, 100) for _ in range(10)]  # Latency data
 
-        # Update the plot with the sample data
-        self.update_plot()
+        Listener.Get("data").subscribe(self.update_plot)
 
-    def updateData(self, data):
-        pass
-
-    def update_plot(self):
+    def update_plot(self, data):
         # Update the line plot with new data
         self.line.setData(self.x_data, self.y_data)

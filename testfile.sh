@@ -2,5 +2,5 @@
 
 filename=$1
 directory="./Dumps"
-sleep 2
+sleep 1
 touch "$directory/$filename.txt"

@@ -61,8 +61,6 @@ class Info(QtWidgets.QWidget):
    
         label = QLabel("Hops")
         
-
-
         # Create a widget to contain the layout
         container = QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout(container)
@@ -88,10 +86,8 @@ class Info(QtWidgets.QWidget):
         for i in reversed(range(self.layout.count())): 
             self.layout.itemAt(i).widget().setParent(None)
 
-        data = {}
-        for key, value in data.items():
-            new = Ele()
-            self.layout.addWidgeet(new)
+        for i in range(6):
+            self.layout.addWidget(Ele())
             
         
 

@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QVBoxLayout, QSplitter
 
 from tabs import Varying
 from info import Info
@@ -27,16 +28,19 @@ class Right(QtWidgets.QWidget):
                 padding: 2px;
                 font-size: 12px;
             }
-        
         """)
 
         # Create widgets
         self.variying = Varying()
         self.info = Info()
-        
-        # Set up layout
-        layout = QVBoxLayout()
-        layout.addWidget(self.variying, 1)
-        layout.addWidget(self.info, 1)
+
+        # Set up layout with splitter
+        splitter = QtWidgets.QSplitter(QtCore.Qt.Vertical)
+        splitter.addWidget(self.variying)
+        splitter.addWidget(self.info)
+        splitter.setHandleWidth(4) 
+
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(splitter)
     
         self.setLayout(layout)

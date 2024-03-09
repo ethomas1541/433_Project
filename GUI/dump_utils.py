@@ -19,6 +19,11 @@ class DumpUtils():
         self.data = {}
         self.directory = "./Dumps"
 
+        for filename in os.listdir(self.directory):
+            file_path = os.path.join(self.directory, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+
         Listener.Get("query").subscribe(self.get_new_data)
 
         self.file_watcher = QFileSystemWatcher()
@@ -27,6 +32,7 @@ class DumpUtils():
         # Set the directory to watch
         directory_to_watch = './Dumps'
         self.file_watcher.addPath(directory_to_watch)
+        
 
     def file_added(self, path):
         print("detected file")

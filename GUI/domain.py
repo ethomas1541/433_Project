@@ -104,7 +104,7 @@ class DomainInput(QFrame):
         """)
 
         # Create widgets
-        self.label = QLabel("Enter Domain")
+        self.label = QLabel("Enter Domain/IP")
         self.inputWidget = BorderedWidget()
         
         # Set up layout

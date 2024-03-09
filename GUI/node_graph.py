@@ -9,7 +9,9 @@ class NodeGraph(QtWidgets.QWidget):
         self.offset = QtCore.QPoint(0, 0)
         self.scale_factor = 1.0
         self.setAttribute(QtCore.Qt.WA_StyledBackground)  
-        self.setStyleSheet("background-color: #212121;")  # Set the background color to red
+        self.setStyleSheet("""
+            background-color: #212121;
+        """)
 
     """
     Commented until zoom bug fixed
@@ -70,11 +72,3 @@ class NodeGraph(QtWidgets.QWidget):
             self.square1.move(self.last_pos.x(), self.last_pos.y())
             self.square2.move(self.last_pos.x(), self.last_pos.y())
             self.update()
-
-    def paintEvent(self, event):
-        qp = QtGui.QPainter(self)
-        qp.translate(self.offset)
-        qp.scale(self.scale_factor, self.scale_factor)
-        pen = QtGui.QPen(QtGui.QColor(QtCore.Qt.black), 5)
-        qp.setPen(pen)
-        qp.drawRect(50, 50, 200, 200)

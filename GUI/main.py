@@ -1,13 +1,16 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtCore import Qt
 
 from leftbar import Left
 from rightbar import Right
-from node_graph import NodeGraph
+from midbar import Mid
+
 from listener import Listener
 
 import sys
 app = QtWidgets.QApplication(sys.argv)
 app.setApplicationName("CS 433 Project")
+
 
 class Ventana(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
@@ -19,6 +22,10 @@ class Ventana(QtWidgets.QMainWindow):
                 font-size: 16pt;
                 color: #ffffff;
                 background-color: #171717;
+            }
+                           
+            QSplitter:handle {
+                background-color: #c0c0c0;
             }
         """)
 
@@ -41,20 +48,38 @@ class Ventana(QtWidgets.QMainWindow):
 
         # Create Diedrico widgets
         left = Left()
-        node_graph = NodeGraph()
+        mid = Mid()
         right = Right()
 
-        # Add Diedrico widgets to layout
+        # Set up layout with splitter
+        splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        splitter.addWidget(mid)
+        splitter.addWidget(right)
+        splitter.setHandleWidth(4)
+
         layout.addWidget(left, 1)
-        layout.addWidget(node_graph, 2)
-        layout.addWidget(right, 2)
- 
+        layout.addWidget(splitter, 4)
+        
         # Set layout as central widget
         central_widget = QtWidgets.QWidget()
         central_widget.setLayout(layout)
         self.setCentralWidget(central_widget)
 
-        node_graph.addNode()
+
+        mid.side.clicked.connect(self.toggle)
+
+        self.left = left
+        self.mid = mid
+        self.right = right
+
+    def toggle(self):
+        if self.left.isHidden():
+            self.left.show()
+            self.mid.side.resetEvent()
+        else:
+            self.left.hide()
+            self.mid.side.pressEvent()
+
 
         '''
         # Load styles from external CSS file
