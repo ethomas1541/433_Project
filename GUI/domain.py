@@ -2,6 +2,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFrame, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QIcon, QCursor, QPixmap
 from PyQt5.QtCore import QSize
+import re
 
 from listener import Listener
 
@@ -75,15 +76,33 @@ class BorderedWidget(QFrame):
     def activated(self):
         if not self.active:
             return
-        
-        self.active = False
 
-        if self.text_input.text().strip() == "":
+        input = self.text_input.text().strip()
+        if input == "":
+            return
+        
+        mode = ""
+        if self.is_ip_address(input):
+            mode = "0"
+        elif self.is_domain_name(input):
+            mode = "1"
+        else:
+            print("not")
             return
 
+        self.active = False
         self.button.pressEvent()
         Listener.Get("query").notify(self.text_input.text().strip())
         self.text_input.clear()
+
+    def is_ip_address(self, string):
+        ipv4_pattern = r'^(\d{1,3}\.){3}\d{1,3}$'
+        #ipv6_pattern = r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$'
+        return re.match(ipv4_pattern, string) #or re.match(ipv6_pattern, string)
+
+    def is_domain_name(self, string):
+        domain_pattern = r'^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
+        return re.match(domain_pattern, string)
 
     def ready_again(self, data):
         print("here")

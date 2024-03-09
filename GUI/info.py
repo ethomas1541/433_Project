@@ -12,21 +12,8 @@ class Info(QtWidgets.QWidget):
 
         self.setStyleSheet("""
             QLabel {
-                
+                padding-bottom: 10px;
             }
-
-            QPushButton {
-                background-color: #2f2f2f;
-                font-size: 12pt;
-            }
-                           
-            QLineEdit {
-                border: 2px solid gray;
-                border-radius: 10px;
-                padding: 2px;
-                font-size: 12px;
-            }
-        
         """)
 
 

@@ -1,9 +1,10 @@
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QVBoxLayout, QTabWidget
+from PyQt5.QtWidgets import QVBoxLayout, QTabWidget, QLabel, QHBoxLayout
 
 from map import MapWidget
 from chart import LatencyChart
 from general_data import General
+from raw import Raw
 
 class Varying(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -38,10 +39,14 @@ class Varying(QtWidgets.QWidget):
         """)
 
         # Create a layout for the widget
-        layout = QVBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)  # Set margins to zero
-        layout.setSpacing(0)  # Set spacing to zero
-        self.setLayout(layout)
+        main_layout = QVBoxLayout(self)
+
+        # Create a label
+        label = QLabel("Statistics")
+        main_layout.addWidget(label)
+
+        # Create a QHBoxLayout for the tab widget and the label
+        tab_layout = QHBoxLayout()
 
         # Create a QTabWidget
         tab_widget = QTabWidget()
@@ -50,13 +55,13 @@ class Varying(QtWidgets.QWidget):
         map_widget = MapWidget()
         chart_widget = LatencyChart()
         general_widget = General()
+        raw_widget = Raw()
 
         # Add tabs to the tab widget
         tab_widget.addTab(map_widget, "Location")
         tab_widget.addTab(chart_widget, "Latency")
         tab_widget.addTab(general_widget, "General")
+        tab_widget.addTab(raw_widget, "Raw")
 
-        # Add the tab widget to the layout of the widget
-        layout.addWidget(tab_widget)
-
-
+        tab_layout.addWidget(tab_widget)
+        main_layout.addLayout(tab_layout)

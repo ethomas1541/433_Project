@@ -9,7 +9,7 @@ from listener import Listener
 
 import sys
 app = QtWidgets.QApplication(sys.argv)
-app.setApplicationName("CS 433 Project")
+app.setApplicationName("DNS Tool")
 
 
 class Ventana(QtWidgets.QMainWindow):
