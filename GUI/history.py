@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QPushButton, QVBoxLayout
 from PyQt5.QtGui import QCursor
 
-
+from listener import Listener
 
 class History(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -16,10 +16,8 @@ class History(QtWidgets.QWidget):
                 background-color: #2f2f2f;
                 font-size: 12pt;
             }
-        
         """)
 
-        
         # Create a scroll area
         scroll_area = QtWidgets.QScrollArea()
         scroll_area.setWidgetResizable(True)  # Allows the scroll area to resize its widget
@@ -68,6 +66,8 @@ class History(QtWidgets.QWidget):
         main_layout = QtWidgets.QVBoxLayout(self)
         main_layout.addWidget(scroll_area)
         self.layout = layout
+
+        Listener.Get("query").subscribe(self.addElement)
         
 
     def addElement(self, text):
@@ -78,12 +78,13 @@ class History(QtWidgets.QWidget):
 class HistoryButton(QPushButton):
     def __init__(self, text, parent=None):
         super().__init__(text, parent)
+
         
         # Set the default style
         self.setStyleSheet('''
             QPushButton {
                 background-color: #171717;
-                font-size: 10pt;
+                font-size: 12pt;
                 border-radius: 5px;
                 text-align: left;
                 padding: 10px;
@@ -101,8 +102,6 @@ class HistoryButton(QPushButton):
         self.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
 
 
-    def on_button_click(self):
-        # Get the text from the input box
-        user_text = self.text_input.text()
-        print("User entered:", user_text)
+    def mousePressEvent(self, event):
+        self.callback(self.text)
 

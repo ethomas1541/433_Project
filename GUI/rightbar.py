@@ -38,14 +38,5 @@ class Right(QtWidgets.QWidget):
         layout = QVBoxLayout()
         layout.addWidget(self.variying, 1)
         layout.addWidget(self.info, 1)
-       
-
+    
         self.setLayout(layout)
-
-
-    def on_button_click(self):
-        # Get the text from the input box
-        user_text = self.text_input.text()
-        print("User entered:", user_text)
-        # You can do whatever you want with the user's text here
-

@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from leftbar import Left
 from rightbar import Right
 from node_graph import NodeGraph
+from listener import Listener
 
 import sys
 app = QtWidgets.QApplication(sys.argv)
@@ -12,14 +13,6 @@ class Ventana(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(Ventana, self).__init__(parent)
 
-        """
-        # Set background color for the entire widget
-        self.setAutoFillBackground(True)
-        p = self.palette()
-        p.setColor(self.backgroundRole(), QtGui.QColor("#1b1b23"))
-        self.setPalette(p)
-        """
-
         self.setStyleSheet("""
             * {
                 font-family: proxima-nova;
@@ -27,8 +20,12 @@ class Ventana(QtWidgets.QMainWindow):
                 color: #ffffff;
                 background-color: #171717;
             }
-        
         """)
+
+        # register listeners
+        Listener("data")
+        Listener("query")
+        Listener("complete")
         
         # resize window as width and height div by 2
         primary_screen = app.primaryScreen()

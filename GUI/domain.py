@@ -1,7 +1,9 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFrame, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout
-from PyQt5.QtGui import QIcon, QCursor
+from PyQt5.QtGui import QIcon, QCursor, QPixmap
 from PyQt5.QtCore import QSize
+
+from listener import Listener
 
 class IconButton(QPushButton):
     def __init__(self, parent=None):
@@ -10,8 +12,8 @@ class IconButton(QPushButton):
         self.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         self.setFixedSize(30,30)
 
-        self.activeIcon = QIcon("select.png")
-        self.inactiveIcon = QIcon("select-inactive.png")
+        self.activeIcon = QIcon("./GUI/select.png")
+        self.inactiveIcon = QIcon("./GUI/select-inactive.png")
         self.setIcon(self.activeIcon)
         self.setIconSize(QSize(25,25))
         
@@ -30,12 +32,13 @@ class IconButton(QPushButton):
     def resetEvent(self):
         self.setIcon(self.activeIcon)
 
-
 class BorderedWidget(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.callback = None
+        self.active = True
+
+        Listener.Get("data").subscribe(self.ready_again)
         
         # Set the frame style to include a border
         self.setFrameStyle(QFrame.Box | QFrame.Plain)
@@ -70,11 +73,21 @@ class BorderedWidget(QFrame):
         """)
 
     def activated(self):
+        if not self.active:
+            return
+        
+        self.active = False
+
+        if self.text_input.text().strip() == "":
+            return
+
         self.button.pressEvent()
-        self.callback(self.text_input.text())
+        Listener.Get("query").notify(self.text_input.text().strip())
         self.text_input.clear()
 
-    def ready_again(self):
+    def ready_again(self, data):
+        print("here")
+        self.active = True
         self.button.resetEvent()
 
 class DomainInput(QFrame):
@@ -100,3 +113,5 @@ class DomainInput(QFrame):
         layout.addWidget(self.inputWidget)
         layout.addStretch(1)  # Add some vertical stretch
         self.setLayout(layout)
+
+        

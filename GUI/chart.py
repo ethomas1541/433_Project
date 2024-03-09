@@ -36,6 +36,9 @@ class LatencyChart(QMainWindow):
         # Update the plot with the sample data
         self.update_plot()
 
+    def updateData(self, data):
+        pass
+
     def update_plot(self):
         # Update the line plot with new data
         self.line.setData(self.x_data, self.y_data)

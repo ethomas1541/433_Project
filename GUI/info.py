@@ -1,6 +1,8 @@
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QLabel, QVBoxLayout
 
+from listener import Listener
+
 class Info(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(Info, self).__init__(parent)
@@ -76,6 +78,22 @@ class Info(QtWidgets.QWidget):
         main_layout = QtWidgets.QVBoxLayout(self)
         main_layout.addWidget(label)
         main_layout.addWidget(scroll_area)
+
+        self.layout = layout
+
+        Listener.Get("data").subscribe(self.update)
+
+
+    def update(self, data):
+        for i in reversed(range(self.layout.count())): 
+            self.layout.itemAt(i).widget().setParent(None)
+
+        data = {}
+        for key, value in data.items():
+            new = Ele()
+            self.layout.addWidgeet(new)
+            
+        
 
 
 

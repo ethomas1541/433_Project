@@ -1,22 +1,34 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtCore import QUrl  # Import QUrl
-
+from PyQt5.QtCore import QUrl
+import folium
+import io
+import pandas as pd
 
 class MapWidget(QWidget):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle('Folium in PyQt Example')
 
         layout = QVBoxLayout()
         self.setLayout(layout)
 
-        # Create a QWebEngineView widget
-        self.webview = QWebEngineView()
+        coordinate = (37.8199286, -122.4782551)
+        m = folium.Map(
+        	title='Stamen Terrain',
+        	zoom_start=5,
+        	location=coordinate
+        )
 
-        # Create a QUrl object with the URL string
-        url = QUrl("https://www.openstreetmap.org")
+        h = folium.Marker(
+            location = [37.8199286, -122.4782551],
+            popup="hey",
+        ).add_to(m)
 
-        # Set the URL using the QUrl object
-        self.webview.setUrl(url)
+        # save map data to data object
+        data = io.BytesIO()
+        m.save(data, close_file=False)
 
-        layout.addWidget(self.webview)
+        webView = QWebEngineView()
+        webView.setHtml(data.getvalue().decode())
+        layout.addWidget(webView)
