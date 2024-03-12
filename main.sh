@@ -8,9 +8,7 @@
 
 mode=0                      # Mode 0 is client to nameserver
 
-[ ! -z "$2" ] && mode=1     # Mode 1 is nameserver to domain (wherein domain IP arg 2 is specified)
-
-mode_string="CLIENT TO NAMESERVER"
+[ ! -z "$2" ] && mode=1     # Mode 1 includes domain data
 
 # Make sure both servers are readily ping-able without unreasonable latency
 
@@ -24,7 +22,6 @@ if [ "$(wc -l DNS_ping.txt | awk {'print $1'})" -lt 1 ]; then
 fi
 
 if [ $mode == 1 ]; then
-    mode_string="NAMESERVER TO DOMAIN"
     timeout 10 ping -c 1 $2 > domain_ping.txt
     if [ "$(wc -l DNS_ping.txt | awk {'print $1'})" -lt 1 ]; then
         echo "Invalid or slow domain"
@@ -32,22 +29,57 @@ if [ $mode == 1 ]; then
     fi
 fi
 
+rm *txt
+
 # Set up dump file
 printf "DNS INFO FOR $1:\n\n" > dump.txt
 
 delv @$1 > delv_out.txt
 
 DNSSEC=$(cat delv_out.txt | grep validated)
+NS_secure=0
+domain_DNSSEC=""
 
-rm delv_out.txt
-
-if [ "$DNSSEC" = "; fully validated" ]; then
-    printf "NAMESERVER: DNSSEC ENABLED\n\n" >> dump.txt
-else
-    printf "NAMESERVER: UNSIGNED RESPONSE\n\n" >> dump.txt
+# Check for domain RSSIG signature
+if [ $mode == 1 ]; then
+    delv @$1 $2 > delv_out2.txt
+    domain_DNSSEC=$(cat delv_out2.txt | head -n 1)
 fi
 
-printf "TIME\t\tLATENCY\t\tROUTER HOPS ($mode_string)\n" >> dump.txt
+# echo $domain_DNSSEC
+
+# Check for nameserver RRSIG signature
+if [ "$DNSSEC" = "; fully validated" ]; then
+    printf "NAMESERVER: DNSSEC ENABLED\n\n" >> dump.txt
+    NS_secure=1
+else
+    printf "NAMESERVER: DNNSEC NOT EVIDENT\n\n" >> dump.txt
+fi
+
+# Check for domain DNSSEC security
+if [ $mode == 1 ]; then
+    if [ "$domain_DNSSEC" = "; fully validated" ]; then
+        # BOTH nameserver and domain run DNSSEC
+        printf "DOMAIN: DNSSEC ENABLED\n\n" >> dump.txt
+    else
+        if [ $NS_secure = 1 ]; then
+            printf "DOMAIN: DNSSEC NOT ENABLED\n\n" >> dump.txt
+        else
+            # Test the domain against another DNS nameserver (which is KNOWN to run DNSSEC)
+            # There's a chance the domain is secure but the given nameserver is not
+            delv @8.8.8.8 $2 > delv_out3.txt
+            if [ "$(cat delv_out3.txt | head -n 1)" = "; fully validated" ]; then
+                printf "DOMAIN: DNSSEC enabled, but incompatible with provided nameserver!\n\n" >> dump.txt
+            else
+                printf "DOMAIN: DNSSEC NOT ENABLED\n\n" >> dump.txt
+            fi
+        fi
+    fi
+fi
+
+rm delv_out*
+
+printf "TIME\t\tLATENCY\t\tROUTER HOPS (CLIENT TO NAMESERVER)\n" >> dump.txt
 
 # Set hop tracker running
 ./hops.sh $1 &
