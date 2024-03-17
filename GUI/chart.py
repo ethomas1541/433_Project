@@ -38,5 +38,12 @@ class LatencyChart(QMainWindow):
         Listener.Get("data").subscribe(self.update_plot)
 
     def update_plot(self, data):
+        latencys = data['dnssec']['latency']
+
+        x = []
+        y = []
+        for i in range(len(latencys)):
+            x.append(latencys[i])
+            y.append(i)
         # Update the line plot with new data
-        self.line.setData(self.x_data, self.y_data)
+        self.line.setData(y, x)

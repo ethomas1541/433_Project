@@ -46,15 +46,12 @@ class Info(QtWidgets.QWidget):
         )
 
    
-        label = QLabel("Hops")
+        label = QLabel("Router Hops")
         
         # Create a widget to contain the layout
         container = QtWidgets.QWidget()
         layout = QtWidgets.QVBoxLayout(container)
 
-        # Add items to the layout
-        for i in range(6):
-            layout.addWidget(Ele())  # Assuming Ele() is your custom widget class
 
         # Set the container widget as the widget of the scroll area
         scroll_area.setWidget(container)
@@ -65,25 +62,27 @@ class Info(QtWidgets.QWidget):
         main_layout.addWidget(scroll_area)
 
         self.layout = layout
+        self.setLayout(layout)
 
         Listener.Get("data").subscribe(self.update)
 
 
     def update(self, data):
+        hops = data['hops']
+
         for i in reversed(range(self.layout.count())): 
             self.layout.itemAt(i).widget().setParent(None)
 
-        for i in range(6):
-            self.layout.addWidget(Ele())
-            
+        for hop in hops:
+            self.layout.addWidget(Ele(hop))
         
 
 
 
 class Ele(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super(Ele, self).__init__(parent)
-        self.resize(400, 400)
+    def __init__(self, data, parent=None):
+        super(Ele, self).__init__()
+        self.resize(100, 100)
         self.offset = QtCore.QPoint(0, 0)
         self.setAttribute(QtCore.Qt.WA_StyledBackground)
 
@@ -110,16 +109,17 @@ class Ele(QtWidgets.QWidget):
         
         """)
 
-        
-        self.label1 = QLabel("Hop: 1")
-        self.label2 = QLabel("Latency: 2")
-        self.label3 = QLabel("DNSSEC: False")
-        
         # Set up layout
         layout = QVBoxLayout()
+
+        self.label1 = QLabel("Hop: " + str(int(data['num']) + 1))
         layout.addWidget(self.label1)
-        layout.addWidget(self.label2)
-        layout.addWidget(self.label3)
 
-
+        if data['lat'] and data['long']:
+            self.label2 = QLabel("Coords: " + str(data['lat']) + ", " + str(data['long']))
+            layout.addWidget(self.label2)
+        if data['city'] and data['country']:
+            self.label4 = QLabel("Location: " + data['city'] + ", " + data['country'])
+            layout.addWidget(self.label4)
+ 
         self.setLayout(layout)
