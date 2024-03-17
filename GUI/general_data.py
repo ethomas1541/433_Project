@@ -1,6 +1,8 @@
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QLabel, QVBoxLayout
 
+from listener import Listener
+
 class General(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(General, self).__init__(parent)
@@ -18,14 +20,19 @@ class General(QtWidgets.QWidget):
             }
         """)
 
-        
-        self.label1 = QLabel("Total Latency: 100")
-        self.label3 = QLabel("DNSSEC %: 30%")
+      
+        Listener.Get("data").subscribe(self.create)
+
+    def create(self, data):
+        latency = data['dnssec']['latency']
+        average = sum(latency) / len(latency)
+        num = len(data['hops'])
+
+        self.label1 = QLabel(f"Avg Latency: {average}")
+        self.label3 = QLabel(f"Num Hops: {num}")
         
         # Set up layout
         layout = QVBoxLayout()
         layout.addWidget(self.label1)
         layout.addWidget(self.label3)
-
-
         self.setLayout(layout)

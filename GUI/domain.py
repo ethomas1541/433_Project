@@ -105,7 +105,6 @@ class BorderedWidget(QFrame):
         return re.match(domain_pattern, string)
 
     def ready_again(self, data):
-        print("here")
         self.active = True
         self.button.resetEvent()
 

@@ -58,10 +58,10 @@ class Varying(QtWidgets.QWidget):
         raw_widget = Raw()
 
         # Add tabs to the tab widget
+        tab_widget.addTab(raw_widget, "Raw")
         tab_widget.addTab(map_widget, "Location")
         tab_widget.addTab(chart_widget, "Latency")
-        tab_widget.addTab(general_widget, "General")
-        tab_widget.addTab(raw_widget, "Raw")
+
 
         tab_layout.addWidget(tab_widget)
         main_layout.addLayout(tab_layout)

@@ -58,7 +58,8 @@ class History(QtWidgets.QWidget):
         layout.addStretch(0)
 
         for i in range(5):
-            layout.insertWidget(0, HistoryButton("google.com"))
+            #layout.insertWidget(0, HistoryButton("google.com"))
+            pass
         
         scroll_area.setWidget(container)
 
@@ -91,17 +92,18 @@ class HistoryButton(QPushButton):
             }
             
             QPushButton:hover {
-                background-color: #2f2f2f;
+                #background-color: #2f2f2f;
             }
             
             QPushButton:pressed {
-                background-color: #2f2f2f;
+                #background-color: #2f2f2f;
             }
         ''')
 
-        self.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+        #self.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
 
 
     def mousePressEvent(self, event):
-        self.callback(self.text)
+        #self.callback(self.text)
+        pass
 
