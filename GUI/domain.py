@@ -77,22 +77,30 @@ class BorderedWidget(QFrame):
         if not self.active:
             return
 
-        input = self.text_input.text().strip()
-        if input == "":
-            return
+        input = self.text_input.text().split(" ")
+
+
+        arg1, arg2 = None, None
         
-        mode = ""
-        if self.is_ip_address(input):
-            mode = "0"
-        elif self.is_domain_name(input):
-            mode = "1"
+        if len(input) == 1:
+            if self.is_ip_address(input[0]):
+                arg1 = input[0]
+            else:
+                return
+        elif len(input) == 2:
+            if self.is_ip_address(input[0]) and self.is_domain_name(input[1]):
+                arg1 = input[0]
+                arg2 = input[1]
+            else:
+                return
         else:
-            print("not")
             return
 
         self.active = False
         self.button.pressEvent()
-        Listener.Get("query").notify(self.text_input.text().strip())
+
+        Listener.Get("query").notify(arg1, arg2)
+
         self.text_input.clear()
 
     def is_ip_address(self, string):

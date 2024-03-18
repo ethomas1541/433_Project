@@ -62,7 +62,6 @@ class Info(QtWidgets.QWidget):
         main_layout.addWidget(scroll_area)
 
         self.layout = layout
-        self.setLayout(layout)
 
         Listener.Get("data").subscribe(self.update)
 
@@ -121,5 +120,5 @@ class Ele(QtWidgets.QWidget):
         if data['city'] and data['country']:
             self.label4 = QLabel("Location: " + data['city'] + ", " + data['country'])
             layout.addWidget(self.label4)
- 
+        
         self.setLayout(layout)

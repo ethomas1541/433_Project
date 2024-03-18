@@ -149,6 +149,8 @@ class DumpUtils():
         print("done")
         """
 
+
+
         data = {}
         data['dnssec'] = self._parse_dump("./Dumps/dump.txt")
         data['hops'] = self._parse_hopdump("./Dumps/hopdump.txt")
