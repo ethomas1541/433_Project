@@ -71,8 +71,11 @@ class History(QtWidgets.QWidget):
         Listener.Get("query").subscribe(self.addElement)
         
 
-    def addElement(self, text):
-        self.layout.insertWidget(0, HistoryButton(text))
+    def addElement(self, arg1, arg2=None):
+        if arg2:
+            arg1 += " "
+            arg1 += arg2
+        self.layout.insertWidget(0, HistoryButton(arg1))
 
 
 
