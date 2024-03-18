@@ -138,7 +138,6 @@ class DumpUtils():
         self.ctr += 1
 
         # Path to shell script
-        print("YEAH")
         script_path = "wsl"
 
         for filename in ['dump.txt', 'hopdump.txt', 'rt.txt']:
