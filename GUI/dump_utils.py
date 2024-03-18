@@ -138,14 +138,15 @@ class DumpUtils():
         self.ctr += 1
 
         # Path to shell script
-        script_path = "./main.sh"
+        print("YEAH")
+        script_path = "wsl"
 
         for filename in ['dump.txt', 'hopdump.txt', 'rt.txt']:
             path = os.path.join("./", filename)
             if os.path.isfile(path):
                 os.remove(path)
 
-        args = [arg1, arg2] if arg2 else [arg1]
+        args = ["-e", "./main.sh", arg1, arg2] if arg2 else ["-e", "./main.sh", arg1]
 
         print(args)
 
