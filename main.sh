@@ -83,7 +83,9 @@ printf "TIME\t\tLATENCY\t\tROUTER HOPS (CLIENT TO NAMESERVER)\n" >> dump.txt
 
 # Set hop tracker running
 ./hops.sh $1 &
+hops_pid=$!
 
+start_time=$(date +%s)
 while true
 do
     sleep 1
@@ -94,4 +96,9 @@ do
         hop_msg=$hopcount
     fi
     printf "$hop_msg\n" >> dump.txt
+    cur_time=$(date +%s)
+    if [ $SECONDS -ge 60 ]; then
+        kill $hops_pid
+        exit
+    fi
 done
