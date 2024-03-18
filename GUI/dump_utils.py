@@ -133,35 +133,31 @@ class DumpUtils():
     def getData(self, filename):
         return self._parse(filename)
     
-    async def run_shell_script(self):
-        """
-        ipv4 = '192.168.1.100'
-        url = "google.com"
-        path = "testfile.sh"
 
-        process = await asyncio.create_subprocess_shell(
-            f"{path} {ipv4} {url}"
-        )
+    def get_new_data(self, arg1, arg2=None):
+        self.ctr += 1
 
-        # Wait for the process to complete with a timeout
-        await asyncio.wait_for(process.wait(), 4)
+        # Path to shell script
+        script_path = "./main.sh"
 
-        print("done")
-        """
+        for filename in ['dump.txt', 'hopdump.txt', 'rt.txt']:
+            path = os.path.join("./", filename)
+            if os.path.isfile(path):
+                os.remove(path)
 
+        args = [arg1, arg2] if arg2 else [arg1]
 
+        print(args)
+
+        # Start the subprocess
+        subprocess.run([script_path] + args)
 
         data = {}
-        data['dnssec'] = self._parse_dump("./Dumps/dump.txt")
-        data['hops'] = self._parse_hopdump("./Dumps/hopdump.txt")
-        data['raw'] = self._parse_raw(["./Dumps/dump.txt", "./Dumps/hopdump.txt"])
+        data['dnssec'] = self._parse_dump("./dump.txt")
+        data['hops'] = self._parse_hopdump("./hopdump.txt")
+        data['raw'] = self._parse_raw(["./dump.txt", "./hopdump.txt"])
 
         Listener.Get("data").notify(data)
-
-
-    def get_new_data(self, query):
-        self.ctr += 1
-        asyncio.run(self.run_shell_script())
 
     def _wait_for_file(self, query):
         pass
